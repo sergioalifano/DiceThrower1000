@@ -13,6 +13,7 @@ namespace DiceThrower1000
             ThrowDice("10d6");
             ThrowDice("3d20");
             ThrowDice("100d6");
+            ThrowDice("3d4 7d5 10d3");
 
             Console.ReadKey();
         }
@@ -22,30 +23,47 @@ namespace DiceThrower1000
         /// </summary>
         /// <param name="input">input string formatted with Dice Notation</param>
         public static void ThrowDice(string input)
+        {  
+            //split the string for multiple dices
+             string[] splitSpace = input.Split();
+
+            //loop for the amount of dices
+            for (int i = 0; i < splitSpace.Length; i++)
+            {
+                //call the function that roll the dices
+                RollTheDice(splitSpace[i]);
+            }
+           
+
+        }
+        public static void RollTheDice(string DiceNotation)
         {
-            //split the tring in two
-            string[] splittedInput = input.Split('d');
+           
             Random rng = new Random();
-            string output=string.Empty;
+            string output = string.Empty;
 
-            //check if the string is formatted well
-            if (splittedInput.Length == 2)
+            int sum = 0;
+            int randomNumber;
+
+            //split the string in two
+            string[] splitNotation = DiceNotation.Split('d');
+
+            //loop to roll the dice
+            for (int i = 0; i < int.Parse(splitNotation[0]); i++)
             {
-                //loop to roll the dice
-                for (int i = 0; i < int.Parse(splittedInput[0]) ; i++)
-                {
-                  //add to the output string the result of the rolled dice  
-                  output += rng.Next(1, int.Parse(splittedInput[1] )+1).ToString()+" ";
-                }
-                
-            }
-            else
-            {
-                Console.WriteLine("Invalid input");
+                //generate a random number
+                randomNumber = rng.Next(1, int.Parse(splitNotation[1]) + 1);
+                //keep track of the sum of the nummber generated
+                sum += randomNumber;
+                //add to the output string the result of the rolled dice   
+                output += randomNumber.ToString() + " ";
             }
 
-            Console.WriteLine("throwing: " + input);
-            Console.WriteLine("Results: "+ output);
+            Console.WriteLine("Throwing: " + DiceNotation);
+            Console.WriteLine("Results: " + output);
+            Console.WriteLine("The average roll is {0} ", Convert.ToDouble(sum) / Convert.ToDouble(int.Parse(splitNotation[0])));
+            Console.WriteLine();
+
         }
     }
 }
